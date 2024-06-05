@@ -7,6 +7,68 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+def extract_tweets_from_url(thread_url, df):
+	# extract tweets from thread url to tweets df
+
+	# attempt to retreive metadata of thread
+	access_metadata = False
+	try:
+		url_response = requests.get(thread_url)
+		html = url_response.text 
+
+		soup = BeautifulSoup(html, 'html.parser')
+		thread_info = str(soup.find('div', {'class': 'thread-info'})).split('\n')
+		thread_length = [element for element in thread_info if 'tweets' in element]
+		
+		# in some threads, thread info is not in div element but in span element
+		if not thread_length:
+			thread_length = str(soup.find('span', {'class': 'thread-info'})).split('\n')
+			thread_length = [element for element in thread_length if 'tweets' in element]
+
+		thread_length = int(thread_length[0].split(' ')[0].strip())
+		thread_id = thread_url[thread_url.rindex('/') + 1:thread_url.rindex('.')]
+		access_metadata = True
+	except:
+		# error when extracting metadata
+		# (older thread do not neccesary have metadata saved)
+		access_metadata = False
+
+	if access_metadata:
+		# attempt to extract relevant elements of all tweets in thread
+		try:
+			for tweet_index in range(1, thread_length + 1):
+				tweet_tag = soup.find('div', {'id': ('tweet_' + str(tweet_index))})
+				if tweet_tag.has_attr('data-tweet'): # not present in some threads
+					tweet_id = tweet_tag['data-tweet']
+					tweet_author = tweet_tag['data-screenname']
+					tweet_url = f'https://twitter.com/{tweet_author}/status/{tweet_id}'
+					tweet_body = tweet_tag.text.strip()
+					tweet_urls = list()
+					tweet_images = list()
+
+					embedded_urls = tweet_tag.find_all('a', {'class': 'entity-url'})
+					for embedded_url in embedded_urls:
+						tweet_urls.append(embedded_url['href'])
+
+					embedded_images = tweet_tag.find_all('span', {'class': 'entity-image'})
+					for embedded_image in embedded_images:
+						url = embedded_image.find('a')
+						tweet_images.append(url['href'])
+
+					# add to df
+					df = df._append({'thread_id': thread_id,
+									 'id': tweet_id,
+				 	 				 'url': tweet_url,
+				 	 				 'author': tweet_author,
+				 					 'body': tweet_body,
+				 					 'tweet_urls': tweet_urls,
+				 					 'tweet_images': tweet_images},
+				 	 				 ignore_index = True)
+		except:
+			# continue (and discard current thread) if any elemant cannot be extracted
+			...
+	return df
+
 def get_tweets_from_threads(user):
 	# extract tweets from threads of user
 
@@ -51,7 +113,7 @@ def scrape_threads(user, keys):
 		os.makedirs(f'../local_data/{user}')
 
 	# add to existing .csv file or create new .csv file
-	filename = f'../local_data/{user}/{user}_threads.csv'
+	filename = f'./data/{user}/{user}_threads.csv'
 	try:
 		df = pd.read_csv(filename)
 	except:
