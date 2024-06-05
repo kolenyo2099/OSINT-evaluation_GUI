@@ -15,7 +15,7 @@ def main():
 		print('no internet connection')
 		exit()
 
-	keys = read_local_keys('keys.json')
+	keys = read_local_keys()
 
 	# if ',' in args.input:
 	# 	for i in args.input.split(','):

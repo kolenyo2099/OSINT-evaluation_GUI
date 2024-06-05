@@ -2,10 +2,11 @@
 import json
 import socket
 
-def read_local_keys(file):
+def read_local_keys():
 	# read keys from local file
+	keys_file = '../secrets/keys.json'
 	keys = dict()
-	with open(file) as f:
+	with open(keys_file) as f:
 		keys = json.loads(f.read())
 	return keys
 
