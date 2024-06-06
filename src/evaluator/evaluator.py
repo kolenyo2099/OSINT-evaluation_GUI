@@ -10,7 +10,6 @@ def evaluate_user(user, keys):
 		tweets_df = pd.read_csv(tweets_filename)
 	except:
 		print(f'no file for tweets found at: {tweets_filename}')
-		print(f'(first run scrape_user_threads [user] to scrape tweets)')
 		exit()
 
 	# extract all tweets, grouped per thread

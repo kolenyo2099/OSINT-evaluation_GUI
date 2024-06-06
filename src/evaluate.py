@@ -1,8 +1,8 @@
 # local imports
 import argparse
 from helpers import check_connection, read_local_keys, read_instructions
-from evaluator import evaluate_single_thread
-from scraper import scrape_threads, get_threads_by_search
+from evaluator import evaluate_single_thread, evaluate_user
+from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threads
 
 # third pary imports
 import pandas as pd
@@ -15,7 +15,7 @@ def evaluate(item, keys):
 		user = item
 		scrape_threads(user, keys)
 		get_tweets_from_threads(user)
-		evaluate_user(user)
+		evaluate_user(user, keys)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
