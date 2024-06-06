@@ -1,17 +1,21 @@
 # local imports
 import argparse
-from helpers import check_connection, read_local_keys, read_instructions, evaluate_single_thread
-from scraper import evaluate_single_thread
+from helpers import check_connection, read_local_keys, read_instructions
+from evalator import evaluate_single_thread
+from scraper import scrape_threads, get_threads_by_search
+
+# third pary imports
+import pandas as pd
 
 def evaluate(item, keys):
 	if item.startswith('https://'):
-		evaluate_single_thread(item, keys)
-	else
-		search for threads of user
-		get threads
-		get tweets from threads
-		evaluate threads
-
+		url = item
+		evaluate_single_thread(url, keys)
+	else:
+		user = item
+		scrape_threads(user, keys)
+		get_tweets_from_threads(user)
+		evaluate_user(user)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
