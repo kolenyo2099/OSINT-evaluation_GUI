@@ -4,7 +4,7 @@ import socket
 
 def read_local_keys():
 	# read keys from local file
-	keys_file = '../secrets/keys.json'
+	keys_file = './secrets/keys.json'
 	keys = dict()
 	with open(keys_file) as f:
 		keys = json.loads(f.read())
@@ -12,7 +12,7 @@ def read_local_keys():
 
 def read_instructions():
 	# read instructions to send to GPT
-	instructions_file = '../secrets/instructions.txt'
+	instructions_file = './secrets/instructions.txt'
 	instructions = None
 	with open(instructions_file) as f:
 		instructions = f.read()
@@ -108,3 +108,32 @@ def evaluate_single_thread(thread_url, keys):
 	else:
 		print(f'error encountered when evaulting thread {thread_id}')
 
+
+
+def get_evaluation(thread, keys):
+	# get response from GPT API based on system instructions and thread
+	if 'open_ai_key' not in keys:
+		print('no open_ai_key present in keys.json')
+		exit()
+	client = OpenAI(api_key = keys['open_ai_key'])
+	try:
+		response = client.chat.completions.create(
+						model = 'gpt-3.5-turbo',
+						temperature = 0.2,
+						response_format = {
+							'type': 'json_object'
+						},
+						messages = [
+							{
+	        					"role": "system", 
+								"content": system_instruction
+							},
+	        				{
+								"role": "user",
+	            				"content": f"First, closely look at your custom instructions. Then, stick to them precisely to evaluate the following thread: {thread}"}
+	      				]
+	    				)
+		return (response.usage, response.choices[0].message.content)
+	except Exception as e:
+		print(f'error when evaluating thread:\n{e}')
+		return (None, None)

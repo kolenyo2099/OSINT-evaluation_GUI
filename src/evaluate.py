@@ -1,6 +1,6 @@
 # local imports
 import argparse
-from helpers import check_connection, read_local_keys
+from helpers import check_connection, read_local_keys, read_instructions
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
