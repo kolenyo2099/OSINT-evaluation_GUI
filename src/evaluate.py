@@ -1,7 +1,7 @@
 # local imports
 import argparse
 from helpers import check_connection, read_local_keys, read_instructions
-from evalator import evaluate_single_thread
+from evaluator import evaluate_single_thread
 from scraper import scrape_threads, get_threads_by_search
 
 # third pary imports
@@ -46,7 +46,7 @@ def main():
 		for item in args.input.split(','):
 			evaluate(item, keys)
 	else:
-		evaluate(item, keys)
+		evaluate(args.input, keys)
 
 if __name__ == '__main__':
 	main()
