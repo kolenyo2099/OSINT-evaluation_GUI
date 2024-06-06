@@ -15,7 +15,17 @@ def main():
 		print('no internet connection')
 		exit()
 
-	keys = read_local_keys()
+	try:
+		keys = read_local_keys()
+	except:
+		print('error reading keys from /secrets/keys.json')
+		exit()
+
+	try:
+		instructions = read_instructions()
+	except:
+		print('error reading instructions from /secrets/instructions.txt')
+		exit()
 
 	# if ',' in args.input:
 	# 	for i in args.input.split(','):
