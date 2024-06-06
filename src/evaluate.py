@@ -1,6 +1,17 @@
 # local imports
 import argparse
-from helpers import check_connection, read_local_keys, read_instructions
+from helpers import check_connection, read_local_keys, read_instructions, evaluate_single_thread
+from scraper import evaluate_single_thread
+
+def evaluate(item, keys):
+	if item.startswith('https://'):
+		evaluate_single_thread(item, keys)
+	else
+		search for threads of user
+		get threads
+		get tweets from threads
+		evaluate threads
+
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
@@ -27,25 +38,11 @@ def main():
 		print('error reading instructions from /secrets/instructions.txt')
 		exit()
 
-	# if ',' in args.input:
-	# 	for i in args.input.split(','):
-	# 		# if i is url
-	# 			# get tweets from thread url
-	# 			# evaluate thread
-	# 		# else
-	# 			# search for threads of user
-	# 			# get threads
-	# 			# get tweets from threads
-	# 			# evaluate threads
-	# else:
-	# 	# if args.input is url
-	# 		# get tweets from thread url
-	# 		# evaluate thread
-	# 	# else
-	# 		# search for threads of user
-	# 		# get threads
-	# 		# get tweets from threads
-	# 		# evaluate threads
+	if ',' in args.input:
+		for item in args.input.split(','):
+			evaluate(item, keys)
+	else:
+		evaluate(item, keys)
 
 if __name__ == '__main__':
 	main()
