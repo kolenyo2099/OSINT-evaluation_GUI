@@ -113,7 +113,7 @@ def scrape_threads(user, keys):
 		os.makedirs(f'../local_data/{user}')
 
 	# add to existing .csv file or create new .csv file
-	filename = f'./data/{user}/{user}_threads.csv'
+	filename = f'../local_data/{user}/{user}_threads.csv'
 	try:
 		df = pd.read_csv(filename)
 	except:
