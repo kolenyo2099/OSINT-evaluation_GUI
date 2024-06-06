@@ -73,7 +73,7 @@ def get_tweets_from_threads(user):
 	# extract tweets from threads of user
 
 	# attempt to open .csv file of threads
-	threads_filename = f'../local_data/{user}/{user}_threads.csv'
+	threads_filename = f'./local_data/{user}/{user}_threads.csv'
 	threads_df = None
 	try:
 		threads_df = pd.read_csv(threads_filename)
@@ -97,7 +97,7 @@ def get_tweets_from_threads(user):
 		tweets_df = extract_tweets_from_url(thread_url, tweets_df)
 
 	if len(tweets_df) > 0:
-		tweets_filename = f'../local_data/{user}/{user}_tweets.csv'
+		tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
 		print(f'saving {len(tweets_df)} tweets from {len(thread_urls)} threads to {tweets_filename}')
 		tweets_df.to_csv(tweets_filename)
 	else:
@@ -107,13 +107,13 @@ def scrape_threads(user, keys):
 	# scrape thread urls based on user as search query
 
 	# create folder for results if not present
-	if not os.path.isdir('../local_data/'):
-		os.makedirs('../local_data/')
-	if not os.path.isdir(f'../local_data/{user}/'):
-		os.makedirs(f'../local_data/{user}')
+	if not os.path.isdir('./local_data/'):
+		os.makedirs('./local_data/')
+	if not os.path.isdir(f'./local_data/{user}/'):
+		os.makedirs(f'./local_data/{user}')
 
 	# add to existing .csv file or create new .csv file
-	filename = f'../local_data/{user}/{user}_threads.csv'
+	filename = f'./local_data/{user}/{user}_threads.csv'
 	try:
 		df = pd.read_csv(filename)
 	except:

@@ -4,7 +4,7 @@ def evaluate_user(user, keys):
 	# evaluate all threads of specified user
 
 	# open .csv file of tweets by user
-	tweets_filename = f'./data/{user}/{user}_tweets.csv'
+	tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
 	tweets_df = None
 	try:
 		tweets_df = pd.read_csv(tweets_filename)
