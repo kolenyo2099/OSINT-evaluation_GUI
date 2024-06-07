@@ -1,5 +1,7 @@
 # local imports
 import json
+import os
+from scraper import extract_tweets_from_url
 
 # third party imports
 import pandas as pd
@@ -39,7 +41,7 @@ def evaluate_user(user, keys, instructions):
 			print(f'error encountered when evaluting, excluding thread {thread_id}')
 
 	# export evaluations to json file
-	results_file = f'./data/{user}/{user}_evaluations.json'
+	results_file = f'./local_data/{user}/{user}_evaluations.json'
 	with open(results_file, 'w') as file:
 		json.dump(evaluations, file, indent = 4)
 	print(f'saved evaluations of {len(threads)} threads to to {results_file}')  
@@ -53,11 +55,11 @@ def evaluate_single_thread(thread_url, keys, instructions):
 		thread_id = thread_id[:thread_id.rindex('.')]
 
 	# create folder for individual results of not present
-	if not os.path.isdir('./data/individual threads/'):
-		os.makedirs('./data/individual threads/')
+	if not os.path.isdir('./local_data/individual threads/'):
+		os.makedirs('./local_data/individual threads/')
 
 	# save tweets of individual thread
-	tweets_filename = f'./data/individual threads/{thread_id}_tweets.csv'
+	tweets_filename = f'./local_data/individual threads/{thread_id}_tweets.csv'
 	tweets_df.to_csv(tweets_filename)
 	print(f'saved {len(tweets_df)} tweets of thread to {tweets_filename}')
 
@@ -77,7 +79,7 @@ def evaluate_single_thread(thread_url, keys, instructions):
 		result['thread_id'] = thread_id
 
 		# export evaluation to json file
-		results_filename = f'./data/individual threads/{thread_id}_evaluation.json'
+		results_filename = f'./local_data/individual threads/{thread_id}_evaluation.json'
 		with open(results_filename, 'w') as file:
 			json.dump(result, file, indent = 4)
 		print(f'saved evaluation of thread to {results_filename}')
