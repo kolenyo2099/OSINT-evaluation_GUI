@@ -7,15 +7,15 @@ from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threa
 # third pary imports
 import pandas as pd
 
-def evaluate(item, keys):
+def evaluate(item, keys, instructions):
 	if item.startswith('https://'):
 		url = item
-		evaluate_single_thread(url, keys)
+		evaluate_single_thread(url, keys, instructions)
 	else:
 		user = item
 		scrape_threads(user, keys)
 		get_tweets_from_threads(user)
-		evaluate_user(user, keys)
+		evaluate_user(user, keys, instructions)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
@@ -44,9 +44,9 @@ def main():
 
 	if ',' in args.input:
 		for item in args.input.split(','):
-			evaluate(item, keys)
+			evaluate(item, keys, instructions)
 	else:
-		evaluate(args.input, keys)
+		evaluate(args.input, keys, instructions)
 
 if __name__ == '__main__':
 	main()

@@ -5,7 +5,7 @@ import json
 import pandas as pd
 from openai import OpenAI
 
-def evaluate_user(user, keys):
+def evaluate_user(user, keys, instructions):
 	# evaluate all threads of specified user
 
 	# open .csv file of tweets by user
@@ -30,7 +30,7 @@ def evaluate_user(user, keys):
 			thread_tweets.append(tweet)
 
 		# post for evaluation, add results to evaluations
-		usage, result = get_evaluation(thread_tweets, keys)
+		usage, result = get_evaluation(thread_tweets, keys, instructions)
 		if result is not None:
 			result = json.loads(result)
 			result['thread_id'] = thread_id
@@ -44,7 +44,7 @@ def evaluate_user(user, keys):
 		json.dump(evaluations, file, indent = 4)
 	print(f'saved evaluations of {len(threads)} threads to to {results_file}')  
 
-def evaluate_single_thread(thread_url, keys):
+def evaluate_single_thread(thread_url, keys, instructions):
 	# extract tweets, thread_id from thread url
 	tweets_df = pd.DataFrame(columns = ['thread_id', 'id', 'url', 'author', 'body', 'tweet_urls', 'tweet_images'])
 	tweets_df = extract_tweets_from_url(thread_url, tweets_df)
@@ -71,7 +71,7 @@ def evaluate_single_thread(thread_url, keys):
 		thread_tweets.append(tweet)
 
 	# post for evaluation
-	usage, result = get_evaluation(thread_tweets, keys)
+	usage, result = get_evaluation(thread_tweets, keys, instructions)
 	if result is not None:
 		result = json.loads(result)
 		result['thread_id'] = thread_id
@@ -84,7 +84,7 @@ def evaluate_single_thread(thread_url, keys):
 	else:
 		print(f'error encountered when evaulting thread {thread_id}')
 
-def get_evaluation(thread, keys):
+def get_evaluation(thread, keys, instructions):
 	# get response from GPT API based on system instructions and thread
 	if 'open_ai_key' not in keys:
 		print('no open_ai_key present in keys.json')
@@ -100,7 +100,7 @@ def get_evaluation(thread, keys):
 						messages = [
 							{
 	        					"role": "system", 
-								"content": system_instruction
+								"content": instructions
 							},
 	        				{
 								"role": "user",
