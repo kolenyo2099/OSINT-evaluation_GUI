@@ -7,14 +7,14 @@ from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threa
 # third pary imports
 import pandas as pd
 
-def evaluate(item, keys, instructions):
+def evaluate(item, keys, instructions, force_scrape):
 	if item.startswith('https://'):
 		url = item
 		evaluate_single_thread(url, keys, instructions)
 	else:
 		user = item
-		scrape_threads(user, keys)
-		get_tweets_from_threads(user)
+		scrape_threads(user, keys, force_scrape)
+		get_tweets_from_threads(user, force_scrape)
 		evaluate_user(user, keys, instructions)
 
 def main():
@@ -23,6 +23,7 @@ def main():
 									 epilog = '')
 	parser.add_argument('input', type = str,
 						help = 'help')
+	parser.add_argument('--force_scrape', type = bool, default = False)
 	args = parser.parse_args()
 
 	# make sure an internet connection is active
@@ -44,9 +45,9 @@ def main():
 
 	if ',' in args.input:
 		for item in args.input.split(','):
-			evaluate(item, keys, instructions)
+			evaluate(item, keys, instructions, args.force_scrape)
 	else:
-		evaluate(args.input, keys, instructions)
+		evaluate(args.input, keys, instructions, args.force_scrape)
 
 if __name__ == '__main__':
 	main()

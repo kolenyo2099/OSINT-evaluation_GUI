@@ -69,11 +69,11 @@ def extract_tweets_from_url(thread_url, df):
 			...
 	return df
 
-def get_tweets_from_threads(user):
+def get_tweets_from_threads(user, force_scrape):
 	# extract tweets from threads of user
 
 	tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
-	if os.path.isfile(tweets_filename):
+	if not force_scrape and os.path.isfile(tweets_filename):
 		print(f'reading tweets from existing file {tweets_filename}')
 		return
 
@@ -102,12 +102,12 @@ def get_tweets_from_threads(user):
 	else:
 		print('no tweets could be scraped')
 
-def scrape_threads(user, keys):
+def scrape_threads(user, keys, force_scrape):
 	# scrape thread urls based on user as search query
 
 	threads_filename = f'./local_data/{user}/{user}_threads.csv'
 
-	if os.path.isfile(threads_filename):
+	if not force_scrape and os.path.isfile(threads_filename):
 		print(f'reading threads from existing file {threads_filename}')
 		return
 
