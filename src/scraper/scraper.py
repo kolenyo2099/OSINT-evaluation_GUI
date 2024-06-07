@@ -72,14 +72,14 @@ def extract_tweets_from_url(thread_url, df):
 def get_tweets_from_threads(user):
 	# extract tweets from threads of user
 
-	# attempt to open .csv file of threads
+	tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
+	if os.path.isfile(tweets_filename):
+		print(f'reading tweets from existing file {tweets_filename}')
+		return
+
+	# open .csv file of threads
 	threads_filename = f'./local_data/{user}/{user}_threads.csv'
-	threads_df = None
-	try:
-		threads_df = pd.read_csv(threads_filename)
-	except:
-		print(f'no file for threads found at: {threads_filename}')
-		exit()
+	threads_df = pd.read_csv(threads_filename)
 
 	# attempt to extract urls from threads_df
 	thread_urls = list()
@@ -89,7 +89,7 @@ def get_tweets_from_threads(user):
 			thread_urls.append(url)
 	else:
 		print(f'no threads found in {threads_filename}')
-		exit()
+		return
 
 	# initiate tweets_df
 	tweets_df = pd.DataFrame(columns = ['thread_id', 'id', 'url', 'author', 'body', 'tweet_urls', 'tweet_images'])
@@ -97,7 +97,6 @@ def get_tweets_from_threads(user):
 		tweets_df = extract_tweets_from_url(thread_url, tweets_df)
 
 	if len(tweets_df) > 0:
-		tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
 		print(f'saving {len(tweets_df)} tweets from {len(thread_urls)} threads to {tweets_filename}')
 		tweets_df.to_csv(tweets_filename)
 	else:
@@ -106,6 +105,12 @@ def get_tweets_from_threads(user):
 def scrape_threads(user, keys):
 	# scrape thread urls based on user as search query
 
+	threads_filename = f'./local_data/{user}/{user}_threads.csv'
+
+	if os.path.isfile(threads_filename):
+		print(f'reading threads from existing file {threads_filename}')
+		return
+
 	# create folder for results if not present
 	if not os.path.isdir('./local_data/'):
 		os.makedirs('./local_data/')
@@ -113,26 +118,25 @@ def scrape_threads(user, keys):
 		os.makedirs(f'./local_data/{user}')
 
 	# add to existing .csv file or create new .csv file
-	filename = f'./local_data/{user}/{user}_threads.csv'
 	try:
-		df = pd.read_csv(filename)
+		df = pd.read_csv(threads_filename)
 	except:
 		df = pd.DataFrame(columns = ['title', 'url'])
-		df.to_csv(filename)
+		df.to_csv(threads_filename)
 
 	# iterate over search results
 	index = 0
 	max_results = 150
 	while index < max_results:
-		df, results = get_threads_by_search(keys, user, index, df, filename)
+		df, results = get_threads_by_search(keys, user, index, df, threads_filename)
 		if results:
 			index += 10
 		else:
 			break
 
 	if len(df) > 0:
-		print(f'saving {len(df)} threads to {filename}')
-		df.to_csv(filename)
+		print(f'saving {len(df)} threads to {threads_filename}')
+		df.to_csv(threads_filename)
 	else:
 		print('no threads found')
 
