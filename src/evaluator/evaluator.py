@@ -16,8 +16,8 @@ def evaluate_user(user, keys, instructions):
 	try:
 		tweets_df = pd.read_csv(tweets_filename)
 	except:
-		print(f'no file for tweets found at: {tweets_filename}')
-		exit()
+		print(f'{user}: no file for tweets found at: {tweets_filename} - evaluation skipped')
+		return
 
 	# extract all tweets, grouped per thread
 	evaluations = list()
@@ -38,13 +38,13 @@ def evaluate_user(user, keys, instructions):
 			result['thread_id'] = thread_id
 			evaluations.append(result)
 		else:
-			print(f'error encountered when evaluting, excluding thread {thread_id}')
+			print(f'{user}: error encountered when evaluting thread {thread_id}')
 
 	# export evaluations to json file
 	results_file = f'./local_data/{user}/{user}_evaluations.json'
 	with open(results_file, 'w') as file:
 		json.dump(evaluations, file, indent = 4)
-	print(f'saved evaluations of {len(threads)} threads to to {results_file}')  
+	print(f'{user}: saved evaluations of {len(threads)} threads to to {results_file}')  
 
 def evaluate_single_thread(thread_url, keys, instructions):
 	# extract tweets, thread_id from thread url
@@ -61,7 +61,7 @@ def evaluate_single_thread(thread_url, keys, instructions):
 	# save tweets of individual thread
 	tweets_filename = f'./local_data/individual threads/{thread_id}_tweets.csv'
 	tweets_df.to_csv(tweets_filename)
-	print(f'saved {len(tweets_df)} tweets of thread to {tweets_filename}')
+	print(f'{user}: saved {len(tweets_df)} tweets of thread to {tweets_filename}')
 
 	# extract content of tweets
 	thread_tweets = list()
@@ -82,14 +82,14 @@ def evaluate_single_thread(thread_url, keys, instructions):
 		results_filename = f'./local_data/individual threads/{thread_id}_evaluation.json'
 		with open(results_filename, 'w') as file:
 			json.dump(result, file, indent = 4)
-		print(f'saved evaluation of thread to {results_filename}')
+		print(f'{thread_id}: saved evaluation of thread to {results_filename}')
 	else:
-		print(f'error encountered when evaulting thread {thread_id}')
+		print(f'{thread_id}: error encountered when evaulting thread')
 
 def get_evaluation(thread, keys, instructions):
 	# get response from GPT API based on system instructions and thread
 	if 'open_ai_key' not in keys:
-		print('no open_ai_key present in keys.json')
+		print('error: no open_ai_key present in keys.json')
 		exit()
 	client = OpenAI(api_key = keys['open_ai_key'])
 	try:
