@@ -1,1 +1,1 @@
-from .helpers import read_local_keys, read_instructions, check_connection
+from .helpers import read_local_keys, read_instructions, check_connection, check_user_available

@@ -1,6 +1,6 @@
 # local imports
 import argparse
-from helpers import check_connection, read_local_keys, read_instructions
+from helpers import check_connection, read_local_keys, read_instructions, check_user_available
 from evaluator import evaluate_single_thread, evaluate_user
 from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threads
 
@@ -13,13 +13,17 @@ def evaluate(item, keys, instructions, force_scrape):
 		evaluate_single_thread(url, keys, instructions)
 	else:
 		user = item
-		if scrape_threads(user, keys, force_scrape):
-			if get_tweets_from_threads(user, force_scrape):
-				evaluate_user(user, keys, instructions)
+		if check_user_available(user):
+			if scrape_threads(user, keys, force_scrape):
+				if get_tweets_from_threads(user, force_scrape):
+					# evaluate_user(user, keys, instructions)
+					print(f'{user}: ** evaluation **')
+				else:
+					print(f'{user}: no tweets could be scraped for evaluation')
 			else:
-				print(f'{user}: no tweets could be scraped for evaluation')
+				print(f'{user}: no threads have been found in search')
 		else:
-			print(f'{user}: no threads have been found in search')
+			print(f'{user}: present in /local_data/unavailable_users.txt (due to previous search having no results)')
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
