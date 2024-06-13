@@ -2,6 +2,7 @@
 import json
 import os
 import requests
+import shutil
 
 # third party imports
 from bs4 import BeautifulSoup
@@ -140,6 +141,8 @@ def scrape_threads(user, keys, force_scrape):
 		df.to_csv(threads_filename)
 		return True
 	else:
+		# delete user folder in local_data if no threads have been found
+		shutil.rmtree(f'./local_data/{user}')
 		return False
 
 def get_threads_by_search(keys, query, index, df, filename):
