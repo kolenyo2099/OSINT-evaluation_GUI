@@ -1,6 +1,6 @@
 # local imports
 import argparse
-from helpers import check_connection, read_local_keys, read_instructions, check_user_blacklist
+from helpers import check_connection, read_local_keys, read_instructions, check_user_blacklist, add_user_to_blacklist
 from evaluator import evaluate_single_thread, evaluate_user
 from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threads
 
@@ -13,7 +13,9 @@ def evaluate(item, keys, instructions, force_scrape):
 		evaluate_single_thread(url, keys, instructions)
 	else:
 		user = item
-		if not check_user_blacklist(user):
+		if check_user_blacklist(user):
+			print(f'{user}: present in /local_data/blacklist_users.txt (due to previous search having no results)')
+		else:
 			if scrape_threads(user, keys, force_scrape):
 				if get_tweets_from_threads(user, force_scrape):
 					# evaluate_user(user, keys, instructions)
@@ -22,9 +24,7 @@ def evaluate(item, keys, instructions, force_scrape):
 					print(f'{user}: no tweets could be scraped for evaluation')
 			else:
 				print(f'{user}: no threads have been found in search')
-				# add_user_to_un
-		else:
-			print(f'{user}: present in /local_data/blacklist_users.txt (due to previous search having no results)')
+				add_user_to_blacklist(user)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',

@@ -40,8 +40,13 @@ def check_user_blacklist(user):
 		unavailable_users = set()
 		with open(filename, 'r') as file:
 			users = file.read()
-			unavailable_users = set(list(user for user in users.split(',') if len(user) > 0))
+			unavailable_users = set(user for user in users.split('\n') if len(user) > 0)
 		if user in unavailable_users:
 			return True
 		else:
 			return False
+
+def add_user_to_blacklist(user):
+	filename = './local_data/blacklist_users.txt'
+	with open(filename, 'a') as file:
+		file.write(user + '\n')
