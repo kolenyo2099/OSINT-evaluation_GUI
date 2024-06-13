@@ -25,7 +25,8 @@ Make sure the necessary packages are present by running:
 In the project directory, create a folder needs to be created called 'secrets'.  
 In this folder, two files need to be made:  
   - keys.json
-  - instructions.txt  
+  - instructions.txt
+
 The keys.json file should be constructed as following:
 ```
 {  
