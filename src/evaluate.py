@@ -7,7 +7,7 @@ from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threa
 # third pary imports
 import pandas as pd
 
-def evaluate(item, keys, instructions, force_scrape):
+def evaluate(item, keys, instructions, force_scrape, skip_scrape):
 	if item.startswith('https://'):
 		url = item
 		evaluate_single_thread(url, keys, instructions)
@@ -16,15 +16,18 @@ def evaluate(item, keys, instructions, force_scrape):
 		if check_user_blacklist(user):
 			print(f'{user}: present in /local_data/blacklist_users.txt (due to previous search having no results)')
 		else:
-			if scrape_threads(user, keys, force_scrape):
-				if get_tweets_from_threads(user, force_scrape):
-					# evaluate_user(user, keys, instructions)
-					print(f'{user}: ** evaluation **')
+			if not skip_scrape:
+				if scrape_threads(user, keys, force_scrape):
+					if get_tweets_from_threads(user, force_scrape):
+						evaluate_user(user, keys, instructions)
+					else:
+						print(f'{user}: no tweets could be scraped for evaluation')
 				else:
-					print(f'{user}: no tweets could be scraped for evaluation')
+					print(f'{user}: no threads have been found in search')
+					add_user_to_blacklist(user)
 			else:
-				print(f'{user}: no threads have been found in search')
-				add_user_to_blacklist(user)
+				print(f'{user}: skip scraping, start evaluation')
+				evaluate_user(user, keys, instructions)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
@@ -33,6 +36,7 @@ def main():
 	parser.add_argument('input', type = str,
 						help = 'help')
 	parser.add_argument('--force_scrape', type = bool, default = False)
+	parser.add_argument('--skip_scrape', type = bool, default = False)
 	args = parser.parse_args()
 
 	# make sure an internet connection is active
@@ -54,9 +58,11 @@ def main():
 
 	if ',' in args.input:
 		for item in args.input.split(','):
-			evaluate(item, keys, instructions, args.force_scrape)
+			evaluate(item, keys, instructions, args.force_scrape,
+											   args.skip_scrape)
 	else:
-		evaluate(args.input, keys, instructions, args.force_scrape)
+		evaluate(args.input, keys, instructions, args.force_scrape,
+											 	 args.skip_scrape)
 
 if __name__ == '__main__':
 	main()

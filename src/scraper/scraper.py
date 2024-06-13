@@ -76,7 +76,7 @@ def get_tweets_from_threads(user, force_scrape):
 	tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
 	if not force_scrape and os.path.isfile(tweets_filename):
 		print(f'{user}: reading tweets from existing file {tweets_filename}')
-		return
+		return True
 
 	# open .csv file of threads
 	threads_filename = f'./local_data/{user}/{user}_threads.csv'
