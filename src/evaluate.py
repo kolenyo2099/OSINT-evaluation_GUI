@@ -13,9 +13,13 @@ def evaluate(item, keys, instructions, force_scrape):
 		evaluate_single_thread(url, keys, instructions)
 	else:
 		user = item
-		scrape_threads(user, keys, force_scrape)
-		if get_tweets_from_threads(user, force_scrape):
-			evaluate_user(user, keys, instructions)
+		if scrape_threads(user, keys, force_scrape):
+			if get_tweets_from_threads(user, force_scrape):
+				evaluate_user(user, keys, instructions)
+			else:
+				print(f'{user}: no tweets could be scraped for evaluation')
+		else:
+			print(f'{user}: no threads have been found in search')
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',

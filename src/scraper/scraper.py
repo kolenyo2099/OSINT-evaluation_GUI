@@ -89,7 +89,7 @@ def get_tweets_from_threads(user, force_scrape):
 			thread_urls.append(url)
 	else:
 		print(f'no threads found in {threads_filename}')
-		return
+		return False
 
 	# initiate tweets_df
 	tweets_df = pd.DataFrame(columns = ['thread_id', 'id', 'url', 'author', 'body', 'tweet_urls', 'tweet_images'])
@@ -101,7 +101,6 @@ def get_tweets_from_threads(user, force_scrape):
 		tweets_df.to_csv(tweets_filename)
 		return True
 	else:
-		print('no tweets could be scraped')
 		return False
 
 def scrape_threads(user, keys, force_scrape):
@@ -139,8 +138,9 @@ def scrape_threads(user, keys, force_scrape):
 	if len(df) > 0:
 		print(f'saving {len(df)} threads to {threads_filename}')
 		df.to_csv(threads_filename)
+		return True
 	else:
-		print('no threads found')
+		return False
 
 def get_threads_by_search(keys, query, index, df, filename):
 	# save results of query search for threads per index
