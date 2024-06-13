@@ -20,18 +20,20 @@ Pipeline ...
 ### Requirements
 Make sure the necessary packages are present by running:
 ```
-  \[py -m\] pip install -r requirements.txt
+  \pip install -r requirements.txt
 ```
 In the project directory, create a folder needs to be created called 'secrets'.  
 In this folder, two files need to be made:  
   - keys.json
   - instructions.txt  
-The keys.json file should be constructed as following:  
-  {
+The keys.json file should be constructed as following:
+```
+{  
     "google_cx": "",  
     "google_api_key": "",  
     "open_ai_key": ""  
-  }
+}
+```
 The instructions.txt file should contain the instructions sent to GPT. These instructions *must* mention that the results should be presented in a .json format, which can be (for example) done as follows:
 ```
 You will output the final result in a JSON object containing the following information:
