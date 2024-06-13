@@ -7,7 +7,7 @@ from scraper import scrape_threads, get_threads_by_search, get_tweets_from_threa
 # third pary imports
 import pandas as pd
 
-def evaluate(item, keys, instructions, force_scrape, skip_scrape):
+def evaluate(item, keys, instructions, force_scrape, skip_scrape, skip_evaluation):
 	if item.startswith('https://'):
 		url = item
 		evaluate_single_thread(url, keys, instructions)
@@ -19,15 +19,16 @@ def evaluate(item, keys, instructions, force_scrape, skip_scrape):
 			if not skip_scrape:
 				if scrape_threads(user, keys, force_scrape):
 					if get_tweets_from_threads(user, force_scrape):
-						evaluate_user(user, keys, instructions)
+						if not skip_evaluation:
+							evaluate_user(user, keys, instructions)
 					else:
 						print(f'{user}: no tweets could be scraped for evaluation')
 				else:
 					print(f'{user}: no threads have been found in search')
 					add_user_to_blacklist(user)
 			else:
-				print(f'{user}: skip scraping, start evaluation')
-				evaluate_user(user, keys, instructions)
+				if not skip_evaluation:
+					evaluate_user(user, keys, instructions)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',
@@ -37,6 +38,7 @@ def main():
 						help = 'help')
 	parser.add_argument('--force_scrape', type = bool, default = False)
 	parser.add_argument('--skip_scrape', type = bool, default = False)
+	parser.add_argument('--skip_evaluation', type = bool, default = False)
 	args = parser.parse_args()
 
 	# make sure an internet connection is active
@@ -59,10 +61,12 @@ def main():
 	if ',' in args.input:
 		for item in args.input.split(','):
 			evaluate(item, keys, instructions, args.force_scrape,
-											   args.skip_scrape)
+											   args.skip_scrape,
+											   args.skip_evaluation)
 	else:
 		evaluate(args.input, keys, instructions, args.force_scrape,
-											 	 args.skip_scrape)
+											 	 args.skip_scrape,
+												 args.skip_evaluation)
 
 if __name__ == '__main__':
 	main()
