@@ -74,7 +74,7 @@ def get_tweets_from_threads(user, force_scrape):
 
 	tweets_filename = f'./local_data/{user}/{user}_tweets.csv'
 	if not force_scrape and os.path.isfile(tweets_filename):
-		print(f'reading tweets from existing file {tweets_filename}')
+		print(f'{user}: reading tweets from existing file {tweets_filename}')
 		return
 
 	# open .csv file of threads
@@ -136,7 +136,7 @@ def scrape_threads(user, keys, force_scrape):
 			break
 
 	if len(df) > 0:
-		print(f'saving {len(df)} threads to {threads_filename}')
+		print(f'{user}: saving {len(df)} threads to {threads_filename}')
 		df.to_csv(threads_filename)
 		return True
 	else:
