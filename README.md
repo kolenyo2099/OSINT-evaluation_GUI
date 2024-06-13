@@ -16,7 +16,7 @@ Pipeline ...
 - dump result
 
   
-## Prerequisite
+## Prerequisites
 ### Requirements
 Make sure the necessary packages are present by running:
 ```
