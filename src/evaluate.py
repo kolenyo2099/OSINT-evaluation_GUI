@@ -14,8 +14,8 @@ def evaluate(item, keys, instructions, force_scrape):
 	else:
 		user = item
 		scrape_threads(user, keys, force_scrape)
-		get_tweets_from_threads(user, force_scrape)
-		evaluate_user(user, keys, instructions)
+		if get_tweets_from_threads(user, force_scrape):
+			evaluate_user(user, keys, instructions)
 
 def main():
 	parser = argparse.ArgumentParser(prog = 'evaluate.py',

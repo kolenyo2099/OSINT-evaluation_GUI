@@ -99,8 +99,10 @@ def get_tweets_from_threads(user, force_scrape):
 	if len(tweets_df) > 0:
 		print(f'saving {len(tweets_df)} tweets from {len(thread_urls)} threads to {tweets_filename}')
 		tweets_df.to_csv(tweets_filename)
+		return True
 	else:
 		print('no tweets could be scraped')
+		return False
 
 def scrape_threads(user, keys, force_scrape):
 	# scrape thread urls based on user as search query
