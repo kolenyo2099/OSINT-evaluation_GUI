@@ -169,7 +169,7 @@ def get_threads_by_search(keys, query, index, df, filename):
 	response = requests.get(url, params=params)
 	if response.status_code != 200:
 		if response.status_code == 429:
-			print('error: daily request limit hit')
+			print('error: daily request limit of google search engine hit')
 			return df, False
 		elif response.status_code == 400: # no more results found
 			return df, False

@@ -29,18 +29,19 @@ def check_connection(host = '8.8.8.8', port = 53, timeout = 3):
 	except socket.error as ex:
 		return False
 
-def check_user_available(user):
+def check_user_blacklist(user):
 	# create filename if not present
-	filename = './local_data/unavailable_users.txt'
+	filename = './local_data/blacklist_users.txt'
 	if not os.path.isfile(filename):
 		with open(filename, 'w') as file:
 			file.write('')
+		return False
 	else:
 		unavailable_users = set()
 		with open(filename, 'r') as file:
 			users = file.read()
 			unavailable_users = set(list(user for user in users.split(',') if len(user) > 0))
 		if user in unavailable_users:
-			return False
-		else:
 			return True
+		else:
+			return False
