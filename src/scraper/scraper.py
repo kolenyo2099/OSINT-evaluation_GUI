@@ -88,7 +88,7 @@ def get_tweets_from_threads(user, force_scrape):
 			url = row['url']
 			thread_urls.append(url)
 	else:
-		print(f'no threads found in {threads_filename}')
+		print(f'{user}: no threads found in {threads_filename}')
 		return False
 
 	# initiate tweets_df
@@ -97,7 +97,7 @@ def get_tweets_from_threads(user, force_scrape):
 		tweets_df = extract_tweets_from_url(thread_url, tweets_df)
 
 	if len(tweets_df) > 0:
-		print(f'saving {len(tweets_df)} tweets from {len(thread_urls)} threads to {tweets_filename}')
+		print(f'{user}: saving {len(tweets_df)} tweets from {len(thread_urls)} threads to {tweets_filename}')
 		tweets_df.to_csv(tweets_filename)
 		return True
 	else:
@@ -109,7 +109,7 @@ def scrape_threads(user, keys, force_scrape):
 	threads_filename = f'./local_data/{user}/{user}_threads.csv'
 
 	if not force_scrape and os.path.isfile(threads_filename):
-		print(f'reading threads from existing file {threads_filename}')
+		print(f'{user}: reading threads from existing file {threads_filename}')
 		return
 
 	# create folder for results if not present
@@ -171,7 +171,7 @@ def get_threads_by_search(keys, query, index, df, filename):
 		elif response.status_code == 400: # no more results found
 			return df, False
 		else:
-			print(f'error from results {start}-{start + 10}: {response.status_code}')
+			print(f'{user}: unexpected status code in search from results {start}-{start + 10}: {response.status_code}')
 	# response ok
 	else:
 		data = json.loads(response.text)
