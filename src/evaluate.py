@@ -10,7 +10,7 @@ import pandas as pd
 def evaluate(item, keys, instructions, force_scrape, skip_scrape, skip_evaluation):
 	if item.startswith('https://'):
 		url = item
-		evaluate_single_thread(url, keys, instructions)
+		evaluate_single_thread(url, keys, instructions, skip_scrape, skip_evaluation)
 	else:
 		user = item
 		if check_user_blacklist(user):

@@ -46,45 +46,56 @@ def evaluate_user(user, keys, instructions):
 		json.dump(evaluations, file, indent = 4)
 	print(f'{user}: saved evaluations of {len(threads)} threads to to {results_file}')  
 
-def evaluate_single_thread(thread_url, keys, instructions):
-	# extract tweets, thread_id from thread url
-	tweets_df = pd.DataFrame(columns = ['thread_id', 'id', 'url', 'author', 'body', 'tweet_urls', 'tweet_images'])
-	tweets_df = extract_tweets_from_url(thread_url, tweets_df)
+def evaluate_single_thread(thread_url, keys, instructions, skip_scrape, skip_evaluation):
 	thread_id = thread_url[thread_url.rindex('/') + 1:]
 	if '.' in thread_id:
 		thread_id = thread_id[:thread_id.rindex('.')]
-
-	# create folder for individual results of not present
-	if not os.path.isdir('./local_data/individual threads/'):
-		os.makedirs('./local_data/individual threads/')
-
-	# save tweets of individual thread
 	tweets_filename = f'./local_data/individual threads/{thread_id}_tweets.csv'
-	tweets_df.to_csv(tweets_filename)
-	print(f'{user}: saved {len(tweets_df)} tweets of thread to {tweets_filename}')
 
-	# extract content of tweets
-	thread_tweets = list()
-	for index, row in tweets_df.iterrows():
-		tweet = {
-		'body': row['body'],
-		'tweet_urls': row['tweet_urls'],
-		'tweet_images': row['tweet_images']}
-		thread_tweets.append(tweet)
-
-	# post for evaluation
-	usage, result = get_evaluation(thread_tweets, keys, instructions)
-	if result is not None:
-		result = json.loads(result)
-		result['thread_id'] = thread_id
-
-		# export evaluation to json file
-		results_filename = f'./local_data/individual threads/{thread_id}_evaluation.json'
-		with open(results_filename, 'w') as file:
-			json.dump(result, file, indent = 4)
-		print(f'{thread_id}: saved evaluation of thread to {results_filename}')
+	if skip_scrape:
+		try:
+			tweets_df = pd.read_csv(tweets_filename)
+		except:
+			print(f'{thread_id}: error reading tweets from {tweets_filename}')
+			return
 	else:
-		print(f'{thread_id}: error encountered when evaulting thread')
+		tweets_df = pd.DataFrame(columns = ['thread_id', 'id', 'url', 'author', 'body', 'tweet_urls', 'tweet_images'])
+		tweets_df = extract_tweets_from_url(thread_url, tweets_df)
+
+		# create folder for individual results of not present
+		if not os.path.isdir('./local_data/individual threads/'):
+			os.makedirs('./local_data/individual threads/')
+
+		tweets_df.to_csv(tweets_filename)
+		print(f'{thread_id}: saved {len(tweets_df)} tweets of thread to {tweets_filename}')
+	
+	if len(tweets_df) < 1:
+		print(f'{thread_url}: error in extracting tweets')
+		return
+
+	if not skip_evaluation:
+		# extract content of tweets
+		thread_tweets = list()
+		for index, row in tweets_df.iterrows():
+			tweet = {
+			'body': row['body'],
+			'tweet_urls': row['tweet_urls'],
+			'tweet_images': row['tweet_images']}
+			thread_tweets.append(tweet)
+
+		# post for evaluation
+		usage, result = get_evaluation(thread_tweets, keys, instructions)
+		if result is not None:
+			result = json.loads(result)
+			result['thread_id'] = thread_id
+
+			# export evaluation to json file
+			results_filename = f'./local_data/individual threads/{thread_id}_evaluation.json'
+			with open(results_filename, 'w') as file:
+				json.dump(result, file, indent = 4)
+			print(f'{thread_id}: saved evaluation of thread to {results_filename}')
+		else:
+			print(f'{thread_id}: error encountered when evaulting thread')
 
 def get_evaluation(thread, keys, instructions):
 	# get response from GPT API based on system instructions and thread
