@@ -26,7 +26,7 @@ Make sure the necessary packages are present by running:
 ```
   pip install -r requirements.txt
 ```
-In the project directory, create a folder needs to be created called 'secrets'.  
+In the project directory, a folder needs to be created called 'secrets'  
 In this folder, two files need to be made:  
   - keys.json
   - instructions.txt
