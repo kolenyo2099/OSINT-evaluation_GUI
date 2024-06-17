@@ -107,11 +107,14 @@ def get_tweets_from_threads(user, force_scrape):
 def scrape_threads(user, keys, force_scrape):
 	# scrape thread urls based on user as search query
 
+	query_limit = None
 	threads_filename = f'./local_data/{user}/{user}_threads.csv'
 
 	if not force_scrape and os.path.isfile(threads_filename):
 		print(f'{user}: reading threads from existing file {threads_filename}')
-		return
+		data = pd.read_csv(threads_filename)
+		query_limit = False
+		return True, query_limit
 
 	# create folder for results if not present
 	if not os.path.isdir('./local_data/'):
@@ -129,7 +132,6 @@ def scrape_threads(user, keys, force_scrape):
 	# iterate over search results
 	index = 0
 	max_results = 150
-	query_limit = None
 	while index < max_results:
 		df, results = get_threads_by_search(keys, user, index, df, threads_filename)
 		if results:
