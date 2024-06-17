@@ -34,17 +34,22 @@ def evaluate_user(user, keys, instructions):
 		# post for evaluation, add results to evaluations
 		usage, result = get_evaluation(thread_tweets, keys, instructions)
 		if result is not None:
-			result = json.loads(result)
-			result['thread_id'] = thread_id
-			evaluations.append(result)
+			try:
+				result = json.loads(result)
+				evaluations.append(result)
+			except:
+				print(f'{user}: evaluation of {thread_id} is not saved as the response is not structured in JSON format. please check /secrets/instructions.txt')
 		else:
 			print(f'{user}: error encountered when evaluting thread {thread_id}')
 
 	# export evaluations to json file
-	results_file = f'./local_data/{user}/{user}_evaluations.json'
-	with open(results_file, 'w') as file:
-		json.dump(evaluations, file, indent = 4)
-	print(f'{user}: saved evaluations of {len(threads)} threads to to {results_file}')  
+	if evaluations:
+		results_file = f'./local_data/{user}/{user}_evaluations.json'
+		with open(results_file, 'w') as file:
+			json.dump(evaluations, file, indent = 4)
+		print(f'{user}: saved evaluations of {len(threads)} threads to to {results_file}')
+	else:
+		print(f'{user}: no evaluations saved')
 
 def evaluate_single_thread(thread_url, keys, instructions, skip_scrape, skip_evaluation):
 	thread_id = thread_url[thread_url.rindex('/') + 1:]
@@ -86,14 +91,15 @@ def evaluate_single_thread(thread_url, keys, instructions, skip_scrape, skip_eva
 		# post for evaluation
 		usage, result = get_evaluation(thread_tweets, keys, instructions)
 		if result is not None:
-			result = json.loads(result)
-			result['thread_id'] = thread_id
-
-			# export evaluation to json file
-			results_filename = f'./local_data/individual threads/{thread_id}_evaluation.json'
-			with open(results_filename, 'w') as file:
-				json.dump(result, file, indent = 4)
-			print(f'{thread_id}: saved evaluation of thread to {results_filename}')
+			try:
+				# export evaluation to json file
+				result = json.loads(result)
+				results_filename = f'./local_data/individual threads/{thread_id}_evaluation.json'
+				with open(results_filename, 'w') as file:
+					json.dump(result, file, indent = 4)
+				print(f'{thread_id}: saved evaluation of thread to {results_filename}')
+			except:
+				print(f'{thread_id}: evaluation is not saved as the response is not structured in JSON format. please check /secrets/instructions.txt')
 		else:
 			print(f'{thread_id}: error encountered when evaulting thread')
 
@@ -122,5 +128,5 @@ def get_evaluation(thread, keys, instructions):
 	    				)
 		return (response.usage, response.choices[0].message.content)
 	except Exception as e:
-		print(f'error when evaluating thread:\n{e}')
+		print(f'error: evaluation response from GPT: {e}')
 		return (None, None)

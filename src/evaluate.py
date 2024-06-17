@@ -17,15 +17,17 @@ def evaluate(item, keys, instructions, force_scrape, skip_scrape, skip_evaluatio
 			print(f'{user}: present in /local_data/blacklist_users.txt (due to previous search having no results)')
 		else:
 			if not skip_scrape:
-				if scrape_threads(user, keys, force_scrape):
+				results, query_limit = scrape_threads(user, keys, force_scrape)
+				if results:
 					if get_tweets_from_threads(user, force_scrape):
 						if not skip_evaluation:
 							evaluate_user(user, keys, instructions)
 					else:
 						print(f'{user}: no tweets could be scraped for evaluation')
 				else:
-					print(f'{user}: no threads have been found in search')
-					add_user_to_blacklist(user)
+					if query_limit == False:
+						print(f'{user}: no threads have been found in search, add user to blacklist')
+						add_user_to_blacklist(user)
 			else:
 				if not skip_evaluation:
 					evaluate_user(user, keys, instructions)

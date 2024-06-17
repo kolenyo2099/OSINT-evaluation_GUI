@@ -129,21 +129,26 @@ def scrape_threads(user, keys, force_scrape):
 	# iterate over search results
 	index = 0
 	max_results = 150
+	query_limit = None
 	while index < max_results:
 		df, results = get_threads_by_search(keys, user, index, df, threads_filename)
 		if results:
 			index += 10
 		else:
+			if results is None:
+				query_limit = True
+			else:
+				query_limit = False
 			break
 
 	if len(df) > 0:
 		print(f'{user}: saving {len(df)} threads to {threads_filename}')
 		df.to_csv(threads_filename)
-		return True
+		return True, query_limit
 	else:
 		# delete user folder in local_data if no threads have been found
 		shutil.rmtree(f'./local_data/{user}')
-		return False
+		return False, query_limit
 
 def get_threads_by_search(keys, query, index, df, filename):
 	# save results of query search for threads per index
@@ -170,7 +175,7 @@ def get_threads_by_search(keys, query, index, df, filename):
 	if response.status_code != 200:
 		if response.status_code == 429:
 			print('error: daily request limit of google search engine hit')
-			return df, False
+			return df, None
 		elif response.status_code == 400: # no more results found
 			return df, False
 		else:
