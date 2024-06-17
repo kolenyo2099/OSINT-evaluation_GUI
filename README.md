@@ -12,8 +12,8 @@ The tool makes use of the following procedures:
 - python evaluate.py [username or Threadreaderapp URL]  
 - Search for threads of this user in Programmable Google Search Engine  
 - Scrape and save thread URLs  
-- Extract tweets from threads  
-- Evaluate tweets per thread  
+- Extract posts from threads  
+- Evaluate posts per thread  
 - Dump result  
   
 ## Prerequisites
@@ -46,8 +46,8 @@ You will output the final result in a JSON object containing the following infor
   - A [custom Google search engine](https://programmablesearchengine.google.com/controlpanel/all) has to be made
   - First, press the blue button to add a new custom search engine
   - Its name is not important. In the What to search? field, enter the following URLs:
-    ..* www.threadreaderapp.com/*  
-    ..* www.threadreaderapp.com/thread/*
+     * www.threadreaderapp.com/*  
+     * www.threadreaderapp.com/thread/*
   - Save the custom search engine
   - Next, open the details your search engine and copy the Search Engine ID
   - This ID should be saved in the keys.json file as the value of google_cx
@@ -70,7 +70,7 @@ It is possible to evaluate multiple items at once, seperated by a comma. Usernam
   py \src\evaluate.py bellingcat,tracelabs,https://threadreaderapp.com/thread/1649032534741663745
 ```
 Optionally, some parts of the process in the tool can be forced or skipped based on the above mentioned optional flags.  
-- Scraping can be forced to try and add results previously not found, even if list of threads/tweets is already present. This can be done with the --force_scrape flag:
+- Scraping can be forced to try and add results previously not found, even if list of threads (and posts) is already present. This can be done with the --force_scrape flag:
 ```
   py \src\evaluate.py [bellingcat] --force_scrape=True
 ```
