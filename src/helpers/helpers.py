@@ -30,7 +30,9 @@ def check_connection(host = '8.8.8.8', port = 53, timeout = 3):
 		return False
 
 def check_user_blacklist(user):
-	# create filename if not present
+	# create file if not present
+	if not os.path.isdir('./local_data/'):
+		os.makedirs('./local_data/')
 	filename = './local_data/blacklist_users.txt'
 	if not os.path.isfile(filename):
 		with open(filename, 'w') as file:
