@@ -1,9 +1,9 @@
 # OSINT-evaluation
-Trust in OSINT [provisionary title]
+Trust in OSINT [provisionary title]  
 University of Amsterdam  
 12425001  
-New Media and Digital Culture MA Thesis
-June 2024
+MA Thesis (New Media and Digital Culture)
+June 2024  
 Cees van Spaendonck  
 
 This tool allows researchers to automatically search for and scrape X/Twitter threads hosted on Threadreaderapp.com that in turn are sent to OpenAI's GPT for evaluation based on custom instructions. In the context of this thesis, this is done with the goal of evaluating the trustworthiness of OSINT investigations - but this tool can be used with other purposes of social media analysis as well based on the custom instructions (e.g. language processing, political sentiment, etc.) 
@@ -62,10 +62,11 @@ You will output the final result in a JSON object containing the following infor
   - This API key should be saved as the value of "open_ai_key" in the keys.json file
 
 ## Usage:
+The main file (*evaluate.py*) is located in the \src\ folder, and has a positional argument of a username or a Threadreader URL as input. The other flags are optional and detailed below.
 ```
   py \src\evaluate.py [username or threadreader URL] [--force_scrape=] [--skip_scrape=] [--skip_evaluation=]
 ```
-It is possible to evaluate multiple items at once, seperated by a comma. Usernames and individual threadreader URLs can be mixed. For example:  
+It is also possible to evaluate multiple items at once, seperated by a comma. Usernames and individual threadreader URLs can be mixed. For example:  
 ```
   py \src\evaluate.py bellingcat,tracelabs,https://threadreaderapp.com/thread/1649032534741663745
 ```
