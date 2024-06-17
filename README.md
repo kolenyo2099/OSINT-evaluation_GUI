@@ -15,6 +15,8 @@ The tool makes use of the following procedures:
 - Extract posts from threads  
 - Evaluate posts per thread  
 - Dump result  
+
+![tool_process](https://github.com/ceesvanspaendonck/OSINT-evaluation/assets/10400578/d5fe478d-bed6-4895-ba58-d6c25422741c)
   
 ## Prerequisites
 ### Requirements
