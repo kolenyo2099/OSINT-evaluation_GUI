@@ -5,10 +5,13 @@ from evaluator import evaluate_single_thread, evaluate_user
 from scraper import scrape_threads, get_tweets_from_threads
 
 def evaluate(item, keys, instructions, force_scrape, skip_scrape, skip_evaluation):
-	# evalutate single thread
-	if item.startswith('https://'):
+	# evalutate single thread if threadreader url
+	if item.startswith('https://threadreaderapp.com/'):
 		url = item
 		evaluate_single_thread(url, keys, instructions, skip_scrape, skip_evaluation)
+	# invalid url
+	elif item.startswith('https://'):
+		print(f'{item}: invalid url')
 	# evaluate user
 	else:
 		user = item
