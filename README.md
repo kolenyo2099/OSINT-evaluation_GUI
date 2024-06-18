@@ -8,18 +8,19 @@ Cees van Spaendonck
 
 This tool allows researchers to automatically search for and scrape X/Twitter threads hosted on Threadreaderapp.com that in turn are sent to OpenAI's GPT for evaluation based on custom instructions. In the context of this thesis, this is done with the goal of evaluating the trustworthiness of OSINT investigations - but this tool can be used with other purposes of social media analysis as well based on the custom instructions (e.g. sentiment analysis, event tracking, misinformation detection). 
 
-For questions or bugs or anything else, please email me at cees.vanspaendonck ***[at]*** student.uva.nl
+Please note that this tool is still being developed. No guarantees can be made regarding its success or safety.  
+For questions or bugs or anything else, please send an email to cees.vanspaendonck ***[at]*** student.uva.nl
 
 The tool makes use of the following procedures:
-- python evaluate.py [username or Threadreaderapp URL]  
-- Search for threads of this user in Programmable Google Search Engine  
+- Run main script with username or Threadreader URL as input *(detailed below)*  
+- Search for threads of this user on Threadreader in Programmable Google Search Engine  
 - Scrape and save thread URLs  
 - Extract posts from threads  
 - Evaluate posts per thread  
 - Dump result  
 
 ![tool_process](https://github.com/ceesvanspaendonck/OSINT-evaluation/assets/10400578/d5fe478d-bed6-4895-ba58-d6c25422741c)
-  
+*This diagram is incomplete*  
 ## Prerequisites
 ### Requirements
 Make sure the necessary packages are present by running:
