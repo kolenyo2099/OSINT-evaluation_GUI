@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Evaluation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>OSINT Evaluation Tool</h1>
+        <form id="searchForm">
+            <input type="text" id="searchTerm" name="searchTerm" placeholder="Enter search term" required>
+            <button type="submit">Search</button>
+            <button type="button" id="resetButton">Reset</button>
+        </form>
+        <div id="loading" style="display:none;">Loading...</div>
+        <div class="info">
+            <p><strong>University of Amsterdam</strong></p>
+            <p>12425001</p>
+            <p>MA Thesis (New Media and Digital Culture) June 2024</p>
+            <p>Cees van Spaendonck</p>
+            <p>This tool allows researchers to automatically search for and scrape X/Twitter threads hosted on Threadreaderapp.com that in turn are sent to OpenAI's GPT for evaluation based on custom instructions. The tool makes use of the following procedures:</p>
+            <ul>
+                <li>Run main script with username or Threadreader URL as input (detailed below)</li>
+                <li>Search for threads of this user on Threadreader in Programmable Google Search Engine</li>
+                <li>Scrape and save thread URLs</li>
+                <li>Extract posts from threads</li>
+                <li>Evaluate posts per thread</li>
+                <li>Dump result</li>
+            </ul>
+        </div>
+        <div id="results"></div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

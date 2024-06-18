@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 40px auto; /* Add space between the top of the page and the container */
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Add space between search and reset buttons */
+}
+
+#loading {
+    margin-top: 20px;
+}
+
+.info {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.info p {
+    margin: 5px 0;
+}
+
+.info ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+#results {
+    margin-top: 20px;
+    text-align: left;
+    overflow-x: auto; /* Add horizontal scroll if necessary */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #
